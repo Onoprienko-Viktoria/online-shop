@@ -17,12 +17,18 @@ public class DataSourceFactory {
     private String jdbcPassword;
     private String jdbcUser;
 
+    public DataSourceFactory(String jdbcUrl) {
+        this.jdbcUrl = jdbcUrl;
+    }
+
     public DataSource create() throws SQLException {
         HikariConfig hikariConfig = new HikariConfig();
-
         hikariConfig.setJdbcUrl(jdbcUrl);
-        hikariConfig.setUsername(jdbcUser);
-        hikariConfig.setPassword(jdbcPassword);
+        if (jdbcUser != null && jdbcPassword != null) {
+            hikariConfig.setUsername(jdbcUser);
+            hikariConfig.setPassword(jdbcPassword);
+        }
+
         return new HikariDataSource(hikariConfig);
     }
 }

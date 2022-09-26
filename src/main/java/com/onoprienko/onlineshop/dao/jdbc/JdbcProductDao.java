@@ -3,7 +3,6 @@ package com.onoprienko.onlineshop.dao.jdbc;
 import com.onoprienko.onlineshop.dao.ProductDao;
 import com.onoprienko.onlineshop.dao.jdbc.mapper.ProductsRowMapper;
 import com.onoprienko.onlineshop.entity.Product;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
@@ -14,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
+
 @Slf4j
 public class JdbcProductDao implements ProductDao {
     private static final String FIND_ALL_PRODUCTS_SQL = "SELECT id, name, price, creation_date FROM Products";
@@ -23,9 +22,22 @@ public class JdbcProductDao implements ProductDao {
     private static final String DELETE_PRODUCT_SQL = "DELETE FROM products WHERE id = ?";
     private static final String FIND_ALL_CONTAINS_WORD = "SELECT id, name, price, creation_date FROM Products WHERE name like concat('%', ?, '%')";
     private static final String FIND_PRODUCT_BY_ID = "SELECT id, name, price, creation_date FROM Products WHERE id = ?";
+    private final String CREATE_SCRIPT = "create table if not exists products (id bigserial not null constraint products_pk primary key, name character varying(250), price bigint, creation_date date)";
+
     private final DataSource dataSource;
 
     private final ProductsRowMapper rowMapper = new ProductsRowMapper();
+
+    public JdbcProductDao(DataSource dataSource) {
+        this.dataSource = dataSource;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_SCRIPT);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+        }catch (Exception e) {
+            throw new RuntimeException("Can not initialize Table products");
+        }
+    }
 
     @Override
     public List<Product> findAll() {
