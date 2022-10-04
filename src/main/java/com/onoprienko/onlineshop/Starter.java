@@ -41,7 +41,9 @@ public class Starter {
 
         //DAO and Services
         DataSourceFactory dataSourceFactory = new DataSourceFactory(
-                properties.getProperty("jdbc.url"));
+                properties.getProperty("jdbc.url"),
+                properties.getProperty("jdbc.pass"),
+                properties.getProperty("jdbc.user"));
         log.info("Configure datasource");
 
         ProductDao productDao = new JdbcProductDao(dataSourceFactory.create());

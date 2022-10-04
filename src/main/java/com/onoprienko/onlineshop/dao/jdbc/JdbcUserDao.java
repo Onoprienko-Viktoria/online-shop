@@ -29,7 +29,7 @@ public class JdbcUserDao implements UserDao {
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
         }catch (Exception e) {
-            throw new RuntimeException("Can not initialize Table products");
+            log.error("Can not initialize Table products", e);
         }
     }
 

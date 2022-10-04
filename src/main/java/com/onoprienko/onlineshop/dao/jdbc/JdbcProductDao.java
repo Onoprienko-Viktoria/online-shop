@@ -31,11 +31,10 @@ public class JdbcProductDao implements ProductDao {
     public JdbcProductDao(DataSource dataSource) {
         this.dataSource = dataSource;
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_SCRIPT);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_SCRIPT);) {
+            preparedStatement.executeQuery();
         }catch (Exception e) {
-            throw new RuntimeException("Can not initialize Table products");
+            log.error("Can not initialize Table products: ", e);
         }
     }
 
