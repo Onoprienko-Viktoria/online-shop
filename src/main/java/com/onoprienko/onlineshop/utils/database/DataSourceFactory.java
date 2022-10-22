@@ -1,4 +1,4 @@
-package com.onoprienko.onlineshop.utils;
+package com.onoprienko.onlineshop.utils.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -13,6 +13,12 @@ public class DataSourceFactory {
     private String jdbcUrl;
     private String jdbcPassword;
     private String jdbcUser;
+
+    public DataSourceFactory(DataBaseProperties dataBaseProperties) {
+        this.jdbcUrl = dataBaseProperties.getUrl();
+        this.jdbcPassword = dataBaseProperties.getPass();
+        this.jdbcUser = dataBaseProperties.getUser();
+    }
 
     public DataSource create() {
         HikariConfig hikariConfig = new HikariConfig();

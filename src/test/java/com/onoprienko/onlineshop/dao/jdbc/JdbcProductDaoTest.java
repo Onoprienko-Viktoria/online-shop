@@ -1,7 +1,7 @@
 package com.onoprienko.onlineshop.dao.jdbc;
 
 import com.onoprienko.onlineshop.entity.Product;
-import com.onoprienko.onlineshop.utils.DataSourceFactory;
+import com.onoprienko.onlineshop.utils.database.DataSourceFactory;
 import org.junit.jupiter.api.*;
 
 import javax.sql.DataSource;
