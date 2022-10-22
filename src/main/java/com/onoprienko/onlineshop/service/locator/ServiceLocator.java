@@ -36,15 +36,10 @@ public class ServiceLocator {
         //DAO and Services
         String herokuDataBaseUrl = System.getenv("DATABASE_URL");
         DataSourceFactory dataSourceFactory;
-        if (herokuDataBaseUrl != null) {
-            log.info("Get database url from environment {}", herokuDataBaseUrl);
-            dataSourceFactory = new DataSourceFactory(herokuDataBaseUrl, null, null);
-        } else {
-            dataSourceFactory = new DataSourceFactory(
-                    properties.getProperty("jdbc.url"),
-                    properties.getProperty("jdbc.pass"),
-                    properties.getProperty("jdbc.user"));
-        }
+        dataSourceFactory = new DataSourceFactory(
+                properties.getProperty("jdbc.url"),
+                properties.getProperty("jdbc.pass"),
+                properties.getProperty("jdbc.user"));
         log.info("Configure datasource");
 
         ProductDao productDao = new JdbcProductDao(dataSourceFactory.create());
