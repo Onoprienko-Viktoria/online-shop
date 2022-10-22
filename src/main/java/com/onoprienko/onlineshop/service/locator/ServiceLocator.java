@@ -35,6 +35,7 @@ public class ServiceLocator {
 
         //DAO and Services
         String herokuDataBaseUrl = System.getenv("DATABASE_URL");
+        log.info("Get database url from environment {}", herokuDataBaseUrl);
         DataSourceFactory dataSourceFactory;
         dataSourceFactory = new DataSourceFactory(
                 properties.getProperty("jdbc.url"),
