@@ -1,8 +1,6 @@
 package com.onoprienko.onlineshop.security;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.onoprienko.onlineshop.security.entity.EncodeInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -23,14 +21,5 @@ public class PasswordEncoder {
     public static boolean verifyUserPass(EncodeInfo encodeInfo) {
         String hashedPassword = DigestUtils.md5Hex(encodeInfo.getSole() + encodeInfo.getDecodedPassword());
         return Objects.equals(hashedPassword, encodeInfo.getEncodedPassword());
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    public static class EncodeInfo {
-        private String sole;
-        private String encodedPassword;
-        private String decodedPassword;
     }
 }

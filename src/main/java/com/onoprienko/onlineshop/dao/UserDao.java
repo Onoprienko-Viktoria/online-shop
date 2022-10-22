@@ -4,8 +4,8 @@ import com.onoprienko.onlineshop.entity.User;
 
 public interface UserDao {
 
-    void addUser(User user);
+    void add(User user);
 
-    User findUserByEmail(String email);
+    User findByEmail(String email);
 
 }

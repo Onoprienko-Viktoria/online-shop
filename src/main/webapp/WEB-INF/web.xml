@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+
+    <servlet>
+        <servlet-name>allProductsServlet</servlet-name>
+        <servlet-class>com.onoprienko.onlineshop.web.servlet.products.AllProductsServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>allProductsServlet</servlet-name>
+        <url-pattern>/products</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>addProductServlet</servlet-name>
+        <servlet-class>com.onoprienko.onlineshop.web.servlet.products.AddProductServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>addProductServlet</servlet-name>
+        <url-pattern>/product/add</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>editProductServlet</servlet-name>
+        <servlet-class>com.onoprienko.onlineshop.web.servlet.products.EditProductServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>editProductServlet</servlet-name>
+        <url-pattern>/product/edit</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>removeProductServlet</servlet-name>
+        <servlet-class>com.onoprienko.onlineshop.web.servlet.products.RemoveProductServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>removeProductServlet</servlet-name>
+        <url-pattern>/product/remove</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>registrationServlet</servlet-name>
+        <servlet-class>com.onoprienko.onlineshop.web.servlet.security.RegistrationServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>registrationServlet</servlet-name>
+        <url-pattern>/registration</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>loginServlet</servlet-name>
+        <servlet-class>com.onoprienko.onlineshop.web.servlet.security.LoginServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>loginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>cartServlet</servlet-name>
+        <servlet-class>com.onoprienko.onlineshop.web.servlet.products.CartServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>cartServlet</servlet-name>
+        <url-pattern>/cart/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>logoutServlet</servlet-name>
+        <servlet-class>com.onoprienko.onlineshop.web.servlet.security.LogoutServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>logoutServlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+
+    <filter>
+        <filter-name>securityFilter</filter-name>
+        <filter-class>com.onoprienko.onlineshop.web.filter.SecurityFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>securityFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+</web-app>

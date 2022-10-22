@@ -1,5 +1,6 @@
 package com.onoprienko.onlineshop.utils;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
@@ -11,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class DataSourceFactoryTest {
 
+    @Disabled
     @Test
     void getConnection() throws SQLException {
         String url = "jdbc:postgresql://localhost:5433/testdb";

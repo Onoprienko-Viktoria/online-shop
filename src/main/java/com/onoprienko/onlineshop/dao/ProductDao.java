@@ -9,13 +9,13 @@ public interface ProductDao {
 
     List<Product> findAll();
 
-    void addProduct(Product product);
+    void add(Product product);
 
-    void removeProduct(Long id);
+    void remove(Long id);
 
-    void editProduct(Product product);
+    void edit(Product product);
 
-    List<Product> findProductsByWordIn(String words);
+    List<Product> findAllByWordIn(String words);
 
-    Product getProductById(long id);
+    Product getById(long id);
 }

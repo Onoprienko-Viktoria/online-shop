@@ -2,7 +2,7 @@ package com.onoprienko.onlineshop.service;
 
 import com.onoprienko.onlineshop.dao.ProductDao;
 import com.onoprienko.onlineshop.entity.Product;
-import com.onoprienko.onlineshop.service.impl.ProductServiceImpl;
+import com.onoprienko.onlineshop.service.impl.DefaultProductService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ProductServiceTest {
     private final ProductDao productDao = Mockito.mock(ProductDao.class);
-    private final ProductService productService = new ProductServiceImpl(productDao);
+    private final ProductService productService = new DefaultProductService(productDao);
 
     Product testProductOne = Product.builder().id(1L)
             .creationDate(Date.valueOf(LocalDate.now()))
@@ -34,7 +34,7 @@ class ProductServiceTest {
     void findAllReturnCorrectValues() {
         Mockito.when(productDao.findAll()).thenReturn(List.of(testProductOne, testProductTwo, testProductThree));
 
-        List<Product> all = productService.findAll();
+        List<Product> all = productService.findAll(null);
 
         assertNotNull(all);
         assertEquals(3, all.size());
@@ -57,7 +57,7 @@ class ProductServiceTest {
     void findAllReturnEmptyList() {
         Mockito.when(productDao.findAll()).thenReturn(new ArrayList<>());
 
-        List<Product> all = productService.findAll();
+        List<Product> all = productService.findAll(null);
 
         assertNotNull(all);
         assertTrue(all.isEmpty());
@@ -67,28 +67,28 @@ class ProductServiceTest {
 
     @Test
     void addProductWorkCorrect() {
-        productService.addProduct(testProductThree);
+        productService.add(testProductThree);
 
-        Mockito.verify(productDao, Mockito.times(1)).addProduct(testProductThree);
+        Mockito.verify(productDao, Mockito.times(1)).add(testProductThree);
     }
 
     @Test
     void editProductWorkCorrect() {
-        productService.editProduct(testProductOne);
+        productService.edit(testProductOne);
 
-        Mockito.verify(productDao, Mockito.times(1)).editProduct(testProductOne);
+        Mockito.verify(productDao, Mockito.times(1)).edit(testProductOne);
     }
 
     @Test
     void removeProductWorkCorrect() {
-        productService.removeProduct(11L);
+        productService.remove(11L);
 
-        Mockito.verify(productDao, Mockito.times(1)).removeProduct(11L);
+        Mockito.verify(productDao, Mockito.times(1)).remove(11L);
     }
 
     @Test
     void findProductsByWordsInReturnListOfProducts() {
-        Mockito.when(productDao.findProductsByWordIn("test")).thenReturn(List.of(testProductOne, testProductThree));
+        Mockito.when(productDao.findAllByWordIn("test")).thenReturn(List.of(testProductOne, testProductThree));
 
         List<Product> all = productService.findAll("test");
 
@@ -103,14 +103,14 @@ class ProductServiceTest {
         assertEquals(10.2, all.get(0).getPrice());
         assertEquals(0, all.get(1).getPrice());
 
-        Mockito.verify(productDao, Mockito.times(1)).findProductsByWordIn("test");
+        Mockito.verify(productDao, Mockito.times(1)).findAllByWordIn("test");
     }
 
     @Test
     public void getProduct() {
-        Mockito.when(productDao.getProductById(3)).thenReturn(testProductThree);
+        Mockito.when(productDao.getById(3)).thenReturn(testProductThree);
 
-        Product product = productService.getProduct(3L);
+        Product product = productService.getById(3L);
 
         assertNotNull(product);
         assertEquals(product.getId(), testProductThree.getId());
@@ -118,6 +118,6 @@ class ProductServiceTest {
         assertEquals(product.getName(), testProductThree.getName());
         assertEquals(product.getCreationDate(), testProductThree.getCreationDate());
 
-        Mockito.verify(productDao, Mockito.times(1)).getProductById(3);
+        Mockito.verify(productDao, Mockito.times(1)).getById(3);
     }
 }

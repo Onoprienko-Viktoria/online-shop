@@ -3,13 +3,13 @@ package com.onoprienko.onlineshop.dao.jdbc;
 import com.onoprienko.onlineshop.dao.ProductDao;
 import com.onoprienko.onlineshop.dao.jdbc.mapper.ProductsRowMapper;
 import com.onoprienko.onlineshop.entity.Product;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,23 +22,23 @@ public class JdbcProductDao implements ProductDao {
     private static final String DELETE_PRODUCT_SQL = "DELETE FROM products WHERE id = ?";
     private static final String FIND_ALL_CONTAINS_WORD = "SELECT id, name, price, creation_date FROM Products WHERE name like concat('%', ?, '%')";
     private static final String FIND_PRODUCT_BY_ID = "SELECT id, name, price, creation_date FROM Products WHERE id = ?";
-    private final String CREATE_SCRIPT = "create table if not exists products (id bigserial not null constraint products_pk primary key, name character varying(250), price bigint, creation_date date)";
 
     private final DataSource dataSource;
 
     private final ProductsRowMapper rowMapper = new ProductsRowMapper();
 
+    @SneakyThrows
     public JdbcProductDao(DataSource dataSource) {
         this.dataSource = dataSource;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_SCRIPT);) {
-            preparedStatement.executeQuery();
-        }catch (Exception e) {
+        try (Connection connection = dataSource.getConnection()) {
+
+        } catch (Exception e) {
             log.error("Can not initialize Table products: ", e);
         }
     }
 
     @Override
+    @SneakyThrows
     public List<Product> findAll() {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_PRODUCTS_SQL);
@@ -48,55 +48,47 @@ public class JdbcProductDao implements ProductDao {
                 products.add(rowMapper.mapRow((resultSet)));
             }
             return products;
-        } catch (SQLException e) {
-            log.error("Error while getting all products", e);
-            throw new RuntimeException(e);
         }
     }
 
 
     @Override
-    public void addProduct(Product product) {
+    @SneakyThrows
+    public void add(Product product) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(ADD_PRODUCT_SQL)) {
             preparedStatement.setString(1, product.getName());
             preparedStatement.setDouble(2, product.getPrice());
             preparedStatement.setDate(3, product.getCreationDate());
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            log.error("Error while adding product", e);
-            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void removeProduct(Long id) {
+    @SneakyThrows
+    public void remove(Long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_PRODUCT_SQL)) {
             statement.setLong(1, id);
             statement.executeUpdate();
-        } catch (SQLException e) {
-            log.error("Error while removing product", e);
-            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void editProduct(Product product) {
+    @SneakyThrows
+    public void edit(Product product) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCTS_SQL)) {
             preparedStatement.setString(1, product.getName());
             preparedStatement.setDouble(2, product.getPrice());
             preparedStatement.setLong(3, product.getId());
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            log.error("Error while editing product", e);
-            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public List<Product> findProductsByWordIn(String word) {
+    @SneakyThrows
+    public List<Product> findAllByWordIn(String word) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_CONTAINS_WORD)) {
             preparedStatement.setString(1, word);
@@ -107,14 +99,12 @@ public class JdbcProductDao implements ProductDao {
                 }
                 return products;
             }
-        } catch (SQLException e) {
-            log.error("Error while getting all products with world {}", word, e);
-            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public Product getProductById(long id) {
+    @SneakyThrows
+    public Product getById(long id) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_PRODUCT_BY_ID)) {
             preparedStatement.setLong(1, id);
@@ -122,9 +112,6 @@ public class JdbcProductDao implements ProductDao {
                 resultSet.next();
                 return rowMapper.mapRow((resultSet));
             }
-        } catch (SQLException e) {
-            log.error("Error while getting product by id", e);
-            throw new RuntimeException(e);
         }
     }
 }

@@ -4,6 +4,7 @@ import com.onoprienko.onlineshop.entity.Product;
 import com.onoprienko.onlineshop.utils.DataSourceFactory;
 import org.junit.jupiter.api.*;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -11,15 +12,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SuppressWarnings("all")
 class JdbcProductDaoTest {
     private final String CREATE_SCRIPT = "create table if not exists products (id bigserial not null constraint products_pk primary key, name character varying(250), price bigint, creation_date date)";
     private final String DELETE_SCRIPT = "DELETE FROM products";
     private final String DROP_SCRIPT = "DROP TABLE products";
-    private final String URL = "jdbc:postgresql://localhost:5433/testdb";
-    private final String PASS = "pass";
-    private final String USER = "user";
+    private final String URL = "jdbc:postgresql://ec2-52-202-236-238.compute-1.amazonaws.com:5432/d67r2cidjccd4v";
+    private final String PASS = "79cc06ff8c06f948cd0eee13a9f659e86fb856800025ad68fee662229a71485c";
+    private final String USER = "ggrmzqjxubkdrd";
 
     Product testProductOne = Product.builder()
             .creationDate(Date.valueOf(LocalDate.now()))
@@ -43,15 +44,15 @@ class JdbcProductDaoTest {
         }
     }
 
-
     @Test
     void addProductAndFindAllWorkCorrect() throws SQLException {
         DataSourceFactory dataSourceFactory = new DataSourceFactory(URL, PASS, USER);
-        JdbcProductDao jdbcProductDao = new JdbcProductDao(dataSourceFactory.create());
+        DataSource dataSource = dataSourceFactory.create();
+        JdbcProductDao jdbcProductDao = new JdbcProductDao(dataSource);
 
-        jdbcProductDao.addProduct(testProductOne);
-        jdbcProductDao.addProduct(testProductTwo);
-        jdbcProductDao.addProduct(testProductThree);
+        jdbcProductDao.add(testProductOne);
+        jdbcProductDao.add(testProductTwo);
+        jdbcProductDao.add(testProductThree);
 
         List<Product> all = jdbcProductDao.findAll();
         assertEquals(all.size(), 3);
@@ -74,13 +75,13 @@ class JdbcProductDaoTest {
         DataSourceFactory dataSourceFactory = new DataSourceFactory(URL, PASS, USER);
         JdbcProductDao jdbcProductDao = new JdbcProductDao(dataSourceFactory.create());
 
-        jdbcProductDao.addProduct(testProductOne);
-        jdbcProductDao.addProduct(testProductTwo);
+        jdbcProductDao.add(testProductOne);
+        jdbcProductDao.add(testProductTwo);
 
         List<Product> before = jdbcProductDao.findAll();
         assertEquals(before.size(), 2);
 
-        jdbcProductDao.removeProduct(1L);
+        jdbcProductDao.remove(1L);
 
         List<Product> after = jdbcProductDao.findAll();
         assertEquals(after.size(), 1);
@@ -91,8 +92,8 @@ class JdbcProductDaoTest {
         DataSourceFactory dataSourceFactory = new DataSourceFactory(URL, PASS, USER);
         JdbcProductDao jdbcProductDao = new JdbcProductDao(dataSourceFactory.create());
 
-        jdbcProductDao.addProduct(testProductOne);
-        jdbcProductDao.addProduct(testProductTwo);
+        jdbcProductDao.add(testProductOne);
+        jdbcProductDao.add(testProductTwo);
 
         List<Product> before = jdbcProductDao.findAll();
         assertEquals(before.size(), 2);
@@ -100,7 +101,7 @@ class JdbcProductDaoTest {
         assertEquals(before.get(1).getName(), "test 2");
 
         testProductThree.setId(before.get(0).getId());
-        jdbcProductDao.editProduct(testProductThree);
+        jdbcProductDao.edit(testProductThree);
 
         List<Product> after = jdbcProductDao.findAll();
         assertEquals(after.size(), 2);
@@ -113,11 +114,11 @@ class JdbcProductDaoTest {
         DataSourceFactory dataSourceFactory = new DataSourceFactory(URL, PASS, USER);
         JdbcProductDao jdbcProductDao = new JdbcProductDao(dataSourceFactory.create());
 
-        jdbcProductDao.addProduct(testProductOne);
-        jdbcProductDao.addProduct(testProductTwo);
-        jdbcProductDao.addProduct(testProductThree);
+        jdbcProductDao.add(testProductOne);
+        jdbcProductDao.add(testProductTwo);
+        jdbcProductDao.add(testProductThree);
 
-        List<Product> productsByWordIn = jdbcProductDao.findProductsByWordIn("3");
+        List<Product> productsByWordIn = jdbcProductDao.findAllByWordIn("3");
         assertEquals(productsByWordIn.size(), 1);
         assertTrue(productsByWordIn.get(0).getName().contains("3"));
         assertEquals(productsByWordIn.get(0).getName(), testProductThree.getName());
@@ -131,7 +132,7 @@ class JdbcProductDaoTest {
         DataSourceFactory dataSourceFactory = new DataSourceFactory(URL, PASS, USER);
         JdbcProductDao jdbcProductDao = new JdbcProductDao(dataSourceFactory.create());
 
-        jdbcProductDao.addProduct(testProductThree);
+        jdbcProductDao.add(testProductThree);
 
 
         List<Product> products = jdbcProductDao.findAll();
@@ -140,7 +141,7 @@ class JdbcProductDaoTest {
         assertEquals(products.get(0).getPrice(), testProductThree.getPrice());
         assertEquals(products.get(0).getCreationDate(), testProductThree.getCreationDate());
 
-        Product product = jdbcProductDao.getProductById(products.get(0).getId());
+        Product product = jdbcProductDao.getById(products.get(0).getId());
 
         assertEquals(product.getName(), testProductThree.getName());
         assertEquals(product.getPrice(), testProductThree.getPrice());
