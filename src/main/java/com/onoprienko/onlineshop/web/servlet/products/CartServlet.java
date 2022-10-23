@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class CartServlet extends HttpServlet {
@@ -54,7 +55,12 @@ public class CartServlet extends HttpServlet {
                 resp.sendRedirect("/products");
             } else {
                 List<Product> products = session.getCart();
-                products.removeIf(product -> id == product.getId());
+                for (Product product : products) {
+                    if(Objects.equals(product.getId(), id)) {
+                        products.remove(product);
+                        break;
+                    }
+                }
                 session.setCart(products);
                 log.info("Remove product from session cart");
                 resp.sendRedirect("/cart");
