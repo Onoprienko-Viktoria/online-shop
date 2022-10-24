@@ -5,5 +5,5 @@ create table if not exists products
     primary key,
     name character varying(250),
 	price bigint,
-	creation_date date
+	creation_date timestamp
 );

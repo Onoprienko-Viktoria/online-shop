@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,16 +23,13 @@ public class JdbcProductDao implements ProductDao {
     private static final String DELETE_PRODUCT_SQL = "DELETE FROM products WHERE id = ?";
     private static final String FIND_ALL_CONTAINS_WORD = "SELECT id, name, price, creation_date FROM Products WHERE name like concat('%', ?, '%')";
     private static final String FIND_PRODUCT_BY_ID = "SELECT id, name, price, creation_date FROM Products WHERE id = ?";
-
     private final DataSource dataSource;
 
     private final ProductsRowMapper rowMapper = new ProductsRowMapper();
 
-    @SneakyThrows
     public JdbcProductDao(DataSource dataSource) {
         this.dataSource = dataSource;
         try (Connection connection = dataSource.getConnection()) {
-
         } catch (Exception e) {
             log.error("Can not initialize Table products: ", e);
         }
@@ -59,7 +57,7 @@ public class JdbcProductDao implements ProductDao {
              PreparedStatement preparedStatement = connection.prepareStatement(ADD_PRODUCT_SQL)) {
             preparedStatement.setString(1, product.getName());
             preparedStatement.setDouble(2, product.getPrice());
-            preparedStatement.setDate(3, product.getCreationDate());
+            preparedStatement.setTimestamp(3, Timestamp.valueOf(product.getCreationDate()));
             preparedStatement.executeUpdate();
         }
     }

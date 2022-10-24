@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,11 +25,11 @@ class AllProductsServletTest {
     private final AllProductsServlet allProductsServlet = new AllProductsServlet(productService, pageGenerator);
 
     Product testProductOne = Product.builder().id(1L)
-            .creationDate(Date.valueOf(LocalDate.now()))
+            .creationDate(LocalDateTime.now())
             .name("test")
             .price(10.2).build();
     Product testProductTwo = Product.builder().id(2L)
-            .creationDate(Date.valueOf(LocalDate.now()))
+            .creationDate(LocalDateTime.now())
             .name("test 21")
             .price(1.2).build();
     Product testProductThree = Product.builder().id(3L)

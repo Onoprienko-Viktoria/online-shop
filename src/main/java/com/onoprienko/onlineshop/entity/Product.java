@@ -3,6 +3,7 @@ package com.onoprienko.onlineshop.entity;
 import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
@@ -14,5 +15,5 @@ public class Product {
     private long id;
     private String name;
     private double price;
-    private Date creationDate;
+    private LocalDateTime creationDate;
 }

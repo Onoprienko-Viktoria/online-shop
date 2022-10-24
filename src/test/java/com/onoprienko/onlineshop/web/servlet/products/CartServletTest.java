@@ -27,11 +27,11 @@ class CartServletTest {
 
     CartServlet cartServlet = new CartServlet(productService, pageGenerator);
     Product testProductOne = Product.builder().id(1L)
-            .creationDate(Date.valueOf(LocalDate.now()))
+            .creationDate(LocalDateTime.now())
             .name("test")
             .price(10.2).build();
     Product testProductTwo = Product.builder().id(2L)
-            .creationDate(Date.valueOf(LocalDate.now()))
+            .creationDate(LocalDateTime.now())
             .name("test 21")
             .price(1.2).build();
     Session session = Session.builder()

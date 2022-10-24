@@ -7,7 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -31,7 +34,7 @@ public class DefaultProductService implements ProductService {
 
     @Override
     public void add(Product product) {
-        product.setCreationDate(Date.valueOf(LocalDate.now()));
+        product.setCreationDate(LocalDateTime.now());
         productDao.add(product);
         log.info("Add product to database {}", product);
     }

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,11 +24,11 @@ class JdbcProductDaoTest {
     private final String USER = "ggrmzqjxubkdrd";
 
     Product testProductOne = Product.builder()
-            .creationDate(Date.valueOf(LocalDate.now()))
+            .creationDate(LocalDateTime.now())
             .name("test 1")
             .price(1).build();
     Product testProductTwo = Product.builder()
-            .creationDate(Date.valueOf(LocalDate.now()))
+            .creationDate(LocalDateTime.now())
             .name("test 2")
             .price(2).build();
     Product testProductThree = Product.builder()
