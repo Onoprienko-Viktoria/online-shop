@@ -12,16 +12,15 @@ import org.mockito.Mockito;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SecurityServiceTest {
-    private final Map<String, Session> sessionMap = new HashMap<>();
+    private final List<Session> sessionList = new ArrayList<>();
     private final UserService userService = Mockito.mock(UserService.class);
-    private final SecurityService securityService = new DefaultSecurityService(userService, sessionMap);
+    private final SecurityService securityService = new DefaultSecurityService(userService, sessionList);
 
     User user = User.builder()
             .name("test")
@@ -64,25 +63,25 @@ class SecurityServiceTest {
 
     @Test
     void removeSessionReturnsTrue() {
-        sessionMap.put("test", session);
+        sessionList.add(session);
 
-        boolean isDeleted = securityService.logout("test");
+        boolean isDeleted = securityService.logout(session);
 
         assertTrue(isDeleted);
     }
 
     @Test
     void removeSessionReturnsTrueEvenIfSessionNotExist() {
-        sessionMap.put("test", session);
+        sessionList.add(session);
 
-        boolean isDeleted = securityService.logout("dsdssads");
+        boolean isDeleted = securityService.logout(session);
 
         assertTrue(isDeleted);
     }
 
     @Test
     void getSession() {
-        sessionMap.put("test", session);
+        sessionList.add(session);
 
         Session test = securityService.findSession("test");
 

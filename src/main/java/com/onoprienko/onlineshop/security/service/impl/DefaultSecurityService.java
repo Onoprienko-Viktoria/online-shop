@@ -20,7 +20,7 @@ import java.util.*;
 @NoArgsConstructor
 public class DefaultSecurityService implements SecurityService {
     private UserService userService;
-    private Map<String, Session> sessionMap = Collections.synchronizedMap(new HashMap<>());
+    private List<Session> sessionList = Collections.synchronizedList(new ArrayList<>());
 
     public DefaultSecurityService(UserService userService) {
         this.userService = userService;
@@ -33,28 +33,27 @@ public class DefaultSecurityService implements SecurityService {
 
         String userToken = UUID.randomUUID().toString();
         List<Product> productsCart = Collections.synchronizedList(new ArrayList<>());
-        sessionMap.put(userToken, Session.builder()
+        Session session = Session.builder()
                 .cart(productsCart)
                 .token(userToken)
                 .role(Role.valueOf(user.getRole()).name())
                 .expire(LocalDateTime.now().plusMinutes(Long.parseLong(timeToLive)))
-                .build());
-        log.info("Login user. Create new Session {}", sessionMap.get(userToken));
-        return sessionMap.get(userToken);
+                .build();
+        sessionList.add(session);
+        log.info("Login user. Create new Session {}", session);
+        return session;
     }
 
     @Override
-    public boolean logout(String token) {
-        sessionMap.remove(token);
-        log.info("Logout user. Remove session with token-key {}", token);
+    public boolean logout(Session session) {
+        sessionList.remove(session);
+        log.info("Logout user. Remove session with token-key {}", session.getToken());
         return true;
     }
 
     @Override
     public Session findSession(String token) {
-        Session session = sessionMap.get(token);
-        log.info("Find session by token {}, session: {}", token, session);
-        return session;
+        Optional<Session> sessionOptional = sessionList.stream().filter(session -> session.getToken().equals(token)).findFirst();
+        return sessionOptional.orElse(null);
     }
-
 }

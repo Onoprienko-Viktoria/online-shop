@@ -6,7 +6,7 @@ import com.onoprienko.onlineshop.security.entity.Session;
 public interface SecurityService {
     Session login(String timeToLive, Credentials credentials);
 
-    boolean logout(String token);
+    boolean logout(Session session);
 
     Session findSession(String token);
 }

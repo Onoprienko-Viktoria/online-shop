@@ -1,5 +1,6 @@
 package com.onoprienko.onlineshop.web.servlet.security;
 
+import com.onoprienko.onlineshop.security.entity.Session;
 import com.onoprienko.onlineshop.security.service.SecurityService;
 import com.onoprienko.onlineshop.service.locator.ServiceLocator;
 import com.onoprienko.onlineshop.web.utils.WebUtils;
@@ -28,7 +29,8 @@ public class LogoutServlet extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String token = WebUtils.getUserTokenFromRequest(req);
         Cookie cookie = new Cookie("user-token", token);
-        if (securityService.logout(token)) {
+        Session session = (Session) req.getAttribute("session");
+        if (securityService.logout(session)) {
             cookie.setMaxAge(0);
             resp.addCookie(cookie);
             log.info("Logout user with token {}", token);

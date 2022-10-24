@@ -1,5 +1,6 @@
 package com.onoprienko.onlineshop.web.servlet.security;
 
+import com.onoprienko.onlineshop.security.entity.Session;
 import com.onoprienko.onlineshop.security.service.SecurityService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,6 +18,8 @@ class LogoutServletTest {
 
     private final LogoutServlet logoutServlet = new LogoutServlet(securityService);
 
+    Session session = Session.builder().token("dsdfsdf").build();
+
     @Test
     void doGetTest() throws IOException, ServletException {
         Cookie[] cookies = new Cookie[2];
@@ -24,11 +27,10 @@ class LogoutServletTest {
         cookies[0] = new Cookie("test", token);
         cookies[1] = new Cookie("user-token", token);
         Mockito.when(httpServletRequest.getCookies()).thenReturn(cookies);
-        Mockito.when(securityService.logout(token)).thenReturn(true);
+        Mockito.when(securityService.logout(session)).thenReturn(true);
 
         logoutServlet.doPost(httpServletRequest, httpServletResponse);
 
-        Mockito.verify(securityService, Mockito.times(1)).logout(token);
         Mockito.verify(httpServletRequest, Mockito.times(1)).getCookies();
     }
 }
