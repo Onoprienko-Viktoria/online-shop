@@ -12,7 +12,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,31 +43,21 @@ public class SecurityFilter implements Filter {
         String requestURI = httpServletRequest.getRequestURI();
         Session session = null;
         if (cookie != null) {
-            session = securityService.findSession(cookie.getValue());
+            try {
+                session = securityService.findSession(cookie.getValue());
+            } catch (Exception e) {
+                httpServletResponse.sendRedirect("/login");
+                return;
+            }
+
         }
 
         if (session != null) {
             httpServletRequest.setAttribute("session", session);
-            if (LocalDateTime.now().isAfter(session.getExpire())) {
-                httpServletResponse.sendRedirect("/login");
+            if(isUserRoleAllowed(session, requestURI, Role.USER.name(), USER_PATHS) ||
+            isUserRoleAllowed(session, requestURI, Role.ADMIN.name(), ADMIN_PATHS)) {
+                chain.doFilter(request, response);
                 return;
-            }
-            if (Objects.equals(session.getRole(), Role.USER.name())) {
-                for (String path : USER_PATHS) {
-                    if (requestURI.startsWith(path)) {
-                        chain.doFilter(request, response);
-                        return;
-                    }
-                }
-            }
-
-            if (Objects.equals(session.getRole(), Role.ADMIN.name())) {
-                for (String path : ADMIN_PATHS) {
-                    if (requestURI.startsWith(path)) {
-                        chain.doFilter(request, response);
-                        return;
-                    }
-                }
             }
         }
         for (String path : GUEST_PATHS) {
@@ -79,5 +68,17 @@ public class SecurityFilter implements Filter {
         }
 
         httpServletResponse.sendRedirect("/login");
+    }
+
+    private boolean isUserRoleAllowed(Session session, String requestURI,
+                                      String role, List<String> paths) {
+        if (Objects.equals(session.getRole(), role)) {
+            for (String path : paths) {
+                if (requestURI.startsWith(path)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

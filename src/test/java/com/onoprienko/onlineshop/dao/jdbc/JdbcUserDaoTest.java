@@ -52,7 +52,7 @@ class JdbcUserDaoTest {
         jdbcProductDao.add(userOne);
         jdbcProductDao.add(userTwo);
 
-        User userByEmailOne = jdbcProductDao.findByEmail(userOne.getEmail());
+        User userByEmailOne = jdbcProductDao.findByEmail(userOne.getEmail()).get();
 
         assertNotNull(userByEmailOne);
         assertEquals(userByEmailOne.getName(), userOne.getName());
@@ -61,7 +61,7 @@ class JdbcUserDaoTest {
         assertEquals(userByEmailOne.getPassword(), userOne.getPassword());
         assertEquals(userByEmailOne.getSole(), userOne.getSole());
 
-        User userByEmailTwo = jdbcProductDao.findByEmail(userTwo.getEmail());
+        User userByEmailTwo = jdbcProductDao.findByEmail(userTwo.getEmail()).get();
 
         assertNotNull(userByEmailTwo);
         assertEquals(userByEmailTwo.getName(), userTwo.getName());

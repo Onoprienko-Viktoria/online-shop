@@ -10,6 +10,8 @@ import com.onoprienko.onlineshop.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
+
 import static com.onoprienko.onlineshop.security.PasswordEncoder.generateSoleAndPass;
 
 @AllArgsConstructor
@@ -19,9 +21,9 @@ public class DefaultUserService implements UserService {
 
     @Override
     public void add(User user) {
-        User userByEmail = userDao.findByEmail(user.getEmail());
-        if (userByEmail != null) {
-            throw new RuntimeException("User with email " + user.getEmail() + " already registered!");
+        Optional<User> userByEmail = userDao.findByEmail(user.getEmail());
+        if (userByEmail.isPresent()) {
+            throw new RuntimeException("User already registered!");
         }
         EncodeInfo encodeInfo = generateSoleAndPass(user.getPassword());
         user.setSole(encodeInfo.getSole());
@@ -34,11 +36,12 @@ public class DefaultUserService implements UserService {
 
     @Override
     public User verifyUser(Credentials credentials) {
-        User foundUser = userDao.findByEmail(credentials.getEmail());
-        if (foundUser == null) {
-            log.error("User with email {} not found", credentials.getEmail());
-            throw new RuntimeException("User with email " + credentials.getEmail() + " not found");
+        Optional<User> optionalUser = userDao.findByEmail(credentials.getEmail());
+        if (optionalUser.isEmpty()) {
+            log.error("User  not found");
+            throw new RuntimeException("User not found");
         }
+        User foundUser = optionalUser.get();
         boolean isVerified = PasswordEncoder.verifyUserPass(EncodeInfo.builder()
                 .sole(foundUser.getSole())
                 .encodedPassword(foundUser.getPassword())
@@ -47,7 +50,7 @@ public class DefaultUserService implements UserService {
         if (isVerified) {
             return foundUser;
         }
-        log.error("Invalid password for user {}", credentials.getEmail());
+        log.error("Invalid password");
         throw new RuntimeException("Invalid password");
     }
 }

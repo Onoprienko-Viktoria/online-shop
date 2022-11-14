@@ -63,7 +63,7 @@
 
     <servlet>
         <servlet-name>cartServlet</servlet-name>
-        <servlet-class>com.onoprienko.onlineshop.web.servlet.products.CartServlet</servlet-class>
+        <servlet-class>com.onoprienko.onlineshop.web.servlet.products.AddToCartServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

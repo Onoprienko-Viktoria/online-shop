@@ -13,19 +13,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
-public class CartServlet extends HttpServlet {
+public class AddToCartServlet extends HttpServlet {
     private final ProductService productService;
     private final PageGenerator pageGenerator;
 
-    public CartServlet(ProductService productService, PageGenerator pageGenerator) {
+    public AddToCartServlet(ProductService productService, PageGenerator pageGenerator) {
         this.productService = productService;
         this.pageGenerator = pageGenerator;
     }
 
-    public CartServlet() {
+    public AddToCartServlet() {
         this.productService = ServiceLocator.getService(ProductService.class);
         this.pageGenerator = ServiceLocator.getService(PageGenerator.class);
     }
@@ -48,23 +47,10 @@ public class CartServlet extends HttpServlet {
             long id = Long.parseLong(req.getParameter("id"));
             Session session = (Session) req.getAttribute("session");
             log.info("Get session from attribute {}", session);
-            if (req.getRequestURI().contains("/add")) {
-                Product product = productService.getById(id);
-                session.getCart().add(product);
-                log.info("Add new product to session cart{}", product);
-                resp.sendRedirect("/products");
-            } else {
-                List<Product> products = session.getCart();
-                for (Product product : products) {
-                    if(Objects.equals(product.getId(), id)) {
-                        products.remove(product);
-                        break;
-                    }
-                }
-                session.setCart(products);
-                log.info("Remove product from session cart");
-                resp.sendRedirect("/cart");
-            }
+            Product product = productService.getById(id);
+            session.getCart().add(product);
+            log.info("Add new product to session cart{}", product);
+            resp.sendRedirect("/products");
         } catch (Exception e) {
             log.error("Error in cart servlet", e);
             String errorMessage = e.getMessage();

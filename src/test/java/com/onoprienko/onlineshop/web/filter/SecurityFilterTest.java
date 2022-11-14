@@ -30,11 +30,7 @@ class SecurityFilterTest {
 
         Mockito.when(httpServletRequest.getRequestURI()).thenReturn("/product/edit");
 
-        Mockito.when(securityService.findSession("dsdfsdf")).thenReturn(Session.builder()
-                .token("dsdfsd")
-                .role("ADMIN")
-                .expire(LocalDateTime.now().minusMinutes(10))
-                .build());
+        Mockito.when(securityService.findSession("dsdfsdf")).thenThrow(new RuntimeException("Session expired"));
 
         securityFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 

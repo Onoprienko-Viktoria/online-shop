@@ -48,7 +48,7 @@ public class LoginServlet extends HttpServlet {
             cookie.setMaxAge(Integer.parseInt(timeToLive));
             resp.addCookie(cookie);
 
-            log.info("Create token. Success login {}", credentials.getEmail());
+            log.info("Create token. Success login");
             resp.sendRedirect("/products");
         } catch (Exception e) {
             String errorMessage = e.getMessage();

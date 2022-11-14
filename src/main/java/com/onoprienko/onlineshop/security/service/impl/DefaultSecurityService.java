@@ -54,6 +54,15 @@ public class DefaultSecurityService implements SecurityService {
     @Override
     public Session findSession(String token) {
         Optional<Session> sessionOptional = sessionList.stream().filter(session -> session.getToken().equals(token)).findFirst();
-        return sessionOptional.orElse(null);
+        if(sessionOptional.isEmpty()) {
+            return null;
+        }
+
+        Session session = sessionOptional.get();
+        if (LocalDateTime.now().isAfter(session.getExpire())) {
+            sessionList.remove(session);
+            throw new RuntimeException("Session expired on: " + session.getExpire());
+        }
+        return session;
     }
 }

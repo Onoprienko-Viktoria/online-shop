@@ -8,6 +8,8 @@ import com.onoprienko.onlineshop.service.impl.DefaultUserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
@@ -40,7 +42,7 @@ class UserServiceTest {
 
     @Test
     void addUserWorkCorrect() {
-        Mockito.when(userDao.findByEmail("b@gmail.com")).thenReturn(null);
+        Mockito.when(userDao.findByEmail("b@gmail.com")).thenReturn(Optional.empty());
 
         userService.add(testUserTwo);
 
@@ -50,11 +52,11 @@ class UserServiceTest {
 
     @Test
     void addUserReturnsExceptionIfUserAlreadyExist() {
-        Mockito.when(userDao.findByEmail("b@gmail.com")).thenReturn(testUserTwo);
+        Mockito.when(userDao.findByEmail("b@gmail.com")).thenReturn(Optional.of(testUserTwo));
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> userService.add(testUserTwo));
 
-        String errorMes = "User with email " + testUserTwo.getEmail() + " already registered!";
+        String errorMes ="User already registered!";
         assertEquals(errorMes, runtimeException.getMessage());
 
         Mockito.verify(userDao, Mockito.times(1)).findByEmail("b@gmail.com");
@@ -62,11 +64,11 @@ class UserServiceTest {
 
     @Test
     void verifyUserReturnsExceptionIfUserNotFound() {
-        Mockito.when(userDao.findByEmail("a@gmail.com")).thenReturn(null);
+        Mockito.when(userDao.findByEmail("a@gmail.com")).thenReturn(Optional.empty());
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> userService.verifyUser(userOneCreds));
 
-        String errorMes = "User with email " + testUserOne.getEmail() + " not found";
+        String errorMes = "User not found";
         assertEquals(errorMes, runtimeException.getMessage());
 
         Mockito.verify(userDao, Mockito.times(1)).findByEmail(testUserOne.getEmail());
@@ -75,7 +77,7 @@ class UserServiceTest {
 
     @Test
     void verifyUserReturnsUser() {
-        Mockito.when(userDao.findByEmail(testUserOne.getEmail())).thenReturn(testUserOne);
+        Mockito.when(userDao.findByEmail(testUserOne.getEmail())).thenReturn(Optional.of(testUserOne));
 
         User user = userService.verifyUser(userOneCreds);
 
@@ -91,7 +93,7 @@ class UserServiceTest {
 
     @Test
     void verifyUserReturnsExceptionIfPasswordIncorrect() {
-        Mockito.when(userDao.findByEmail(testUserTwo.getEmail())).thenReturn(testUserTwo);
+        Mockito.when(userDao.findByEmail(testUserTwo.getEmail())).thenReturn(Optional.of(testUserTwo));
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> userService.verifyUser(testUserTwoCreds));
 

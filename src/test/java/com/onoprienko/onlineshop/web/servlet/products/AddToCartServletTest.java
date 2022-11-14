@@ -11,21 +11,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
 
-class CartServletTest {
+class AddToCartServletTest {
     private final ProductService productService = Mockito.mock(ProductService.class);
     private final PageGenerator pageGenerator = Mockito.mock(PageGenerator.class);
     private final HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
     private final HttpServletResponse httpServletResponse = Mockito.mock(HttpServletResponse.class);
     private final PrintWriter printWriter = Mockito.mock(PrintWriter.class);
 
-    CartServlet cartServlet = new CartServlet(productService, pageGenerator);
+    AddToCartServlet addToCartServlet = new AddToCartServlet(productService, pageGenerator);
     Product testProductOne = Product.builder().id(1L)
             .creationDate(LocalDateTime.now())
             .name("test")
@@ -47,7 +45,7 @@ class CartServletTest {
         Mockito.when(pageGenerator.getPage("add_product.ftl")).thenReturn("test");
         Mockito.when(httpServletResponse.getWriter()).thenReturn(printWriter);
 
-        cartServlet.doGet(httpServletRequest, httpServletResponse);
+        addToCartServlet.doGet(httpServletRequest, httpServletResponse);
         HashMap<String, Object> result = new HashMap<>();
         result.put("products", session.getCart());
 
@@ -64,7 +62,7 @@ class CartServletTest {
         Mockito.when(pageGenerator.getPage("add_product.ftl")).thenReturn("test");
         Mockito.when(httpServletResponse.getWriter()).thenReturn(printWriter);
 
-        cartServlet.doPost(httpServletRequest, httpServletResponse);
+        addToCartServlet.doPost(httpServletRequest, httpServletResponse);
 
         Mockito.verify(productService, Mockito.times(1)).getById(1L);
         Mockito.verify(httpServletRequest, Mockito.times(1)).getAttribute("session");
@@ -79,7 +77,7 @@ class CartServletTest {
         Mockito.when(pageGenerator.getPage("add_product.ftl")).thenReturn("test");
         Mockito.when(httpServletResponse.getWriter()).thenReturn(printWriter);
 
-        cartServlet.doPost(httpServletRequest, httpServletResponse);
+        addToCartServlet.doPost(httpServletRequest, httpServletResponse);
 
         Mockito.verify(httpServletRequest, Mockito.times(1)).getAttribute("session");
         Mockito.verify(httpServletRequest, Mockito.times(1)).getParameter("id");
@@ -95,7 +93,7 @@ class CartServletTest {
 
         Mockito.doThrow(new RuntimeException("exception")).when(productService).getById(1L);
 
-        cartServlet.doPost(httpServletRequest, httpServletResponse);
+        addToCartServlet.doPost(httpServletRequest, httpServletResponse);
 
         Mockito.verify(pageGenerator, Mockito.times(1)).getPageWithMessage("user_cart.ftl", "exception");
         Mockito.verify(httpServletResponse, Mockito.times(1)).getWriter();

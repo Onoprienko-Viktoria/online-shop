@@ -25,14 +25,10 @@ public class JdbcProductDao implements ProductDao {
     private static final String FIND_PRODUCT_BY_ID = "SELECT id, name, price, creation_date FROM Products WHERE id = ?";
     private final DataSource dataSource;
 
-    private final ProductsRowMapper rowMapper = new ProductsRowMapper();
+    private final static ProductsRowMapper ROW_MAPPER = new ProductsRowMapper();
 
     public JdbcProductDao(DataSource dataSource) {
         this.dataSource = dataSource;
-        try (Connection connection = dataSource.getConnection()) {
-        } catch (Exception e) {
-            log.error("Can not initialize Table products: ", e);
-        }
     }
 
     @Override
@@ -43,7 +39,7 @@ public class JdbcProductDao implements ProductDao {
              ResultSet resultSet = preparedStatement.executeQuery()) {
             List<Product> products = new ArrayList<>();
             while (resultSet.next()) {
-                products.add(rowMapper.mapRow((resultSet)));
+                products.add(ROW_MAPPER.mapRow((resultSet)));
             }
             return products;
         }
@@ -93,7 +89,7 @@ public class JdbcProductDao implements ProductDao {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 List<Product> products = new ArrayList<>();
                 while (resultSet.next()) {
-                    products.add(rowMapper.mapRow((resultSet)));
+                    products.add(ROW_MAPPER.mapRow((resultSet)));
                 }
                 return products;
             }
@@ -108,7 +104,7 @@ public class JdbcProductDao implements ProductDao {
             preparedStatement.setLong(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 resultSet.next();
-                return rowMapper.mapRow((resultSet));
+                return ROW_MAPPER.mapRow((resultSet));
             }
         }
     }

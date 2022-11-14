@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Optional;
 
 
 @Slf4j
@@ -19,14 +20,11 @@ public class JdbcUserDao implements UserDao {
     private static final String FIND_USER_BY_EMAIL = "SELECT name, email, password, sole, role FROM users WHERE email = ?";
     private final DataSource dataSource;
 
-    private final UsersRowMapper usersRowMapper = new UsersRowMapper();
+    private final static UsersRowMapper USERS_ROW_MAPPER = new UsersRowMapper();
 
     @SneakyThrows
     public JdbcUserDao(DataSource dataSource) {
         this.dataSource = dataSource;
-        try (Connection connection = dataSource.getConnection()) {
-
-        }
     }
 
 
@@ -46,16 +44,15 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     @SneakyThrows
-    public User findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_BY_EMAIL)) {
             preparedStatement.setString(1, email);
             try (ResultSet resultSet = preparedStatement.executeQuery();) {
-                if (resultSet.next()) {
-                    return usersRowMapper.mapRow(resultSet);
-                } else {
-                    return null;
+                if(resultSet.next()) {
+                    return Optional.of(USERS_ROW_MAPPER.mapRow(resultSet));
                 }
+                return Optional.empty();
             }
         }
     }
