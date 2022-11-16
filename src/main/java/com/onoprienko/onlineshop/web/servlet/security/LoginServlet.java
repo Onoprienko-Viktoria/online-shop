@@ -1,10 +1,14 @@
 package com.onoprienko.onlineshop.web.servlet.security;
 
+import com.onoprienko.onlineshop.ioc.context.OnlineShopApplicationContext;
 import com.onoprienko.onlineshop.security.entity.Credentials;
+import com.onoprienko.onlineshop.security.entity.Session;
 import com.onoprienko.onlineshop.security.service.SecurityService;
-import com.onoprienko.onlineshop.service.locator.ServiceLocator;
+import com.onoprienko.onlineshop.security.service.impl.DefaultSecurityService;
 import com.onoprienko.onlineshop.web.utils.PageGenerator;
 import com.onoprienko.onlineshop.web.utils.WebUtils;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.Cookie;
@@ -14,22 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
+@AllArgsConstructor
+@NoArgsConstructor
 public class LoginServlet extends HttpServlet {
-    private final SecurityService securityService;
-    private final PageGenerator pageGenerator;
-    private final String timeToLive;
+    private SecurityService securityService = (SecurityService) OnlineShopApplicationContext.getService(DefaultSecurityService.class);
+    private PageGenerator pageGenerator = (PageGenerator) OnlineShopApplicationContext.getService(PageGenerator.class);
 
-    public LoginServlet(SecurityService securityService, PageGenerator pageGenerator, String timeToLive) {
-        this.securityService = securityService;
-        this.pageGenerator = pageGenerator;
-        this.timeToLive = timeToLive;
-    }
-
-    public LoginServlet() {
-        this.securityService = ServiceLocator.getService(SecurityService.class);
-        this.pageGenerator = ServiceLocator.getService(PageGenerator.class);
-        this.timeToLive = "480";
-    }
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -42,10 +36,10 @@ public class LoginServlet extends HttpServlet {
         try {
             Credentials credentials = WebUtils.getCredentialsFromRequest(req);
 
-            String token = securityService.login(timeToLive, credentials).getToken();
+            Session session = securityService.login(credentials);
 
-            Cookie cookie = new Cookie("user-token", token);
-            cookie.setMaxAge(Integer.parseInt(timeToLive));
+            Cookie cookie = new Cookie("user-token", session.getToken());
+            cookie.setMaxAge(session.getTimeToLive());
             resp.addCookie(cookie);
 
             log.info("Create token. Success login");

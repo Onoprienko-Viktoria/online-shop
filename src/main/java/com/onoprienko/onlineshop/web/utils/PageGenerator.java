@@ -1,8 +1,11 @@
 package com.onoprienko.onlineshop.web.utils;
 
+import com.onoprienko.ioc.annotation.PostConstruct;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -10,11 +13,26 @@ import java.io.Writer;
 import java.util.Collections;
 import java.util.Map;
 
+@NoArgsConstructor
+@Setter
 public class PageGenerator {
-    private final Configuration configuration;
+    private Configuration configuration;
+    private String templatesDir;
 
+    @PostConstruct
+    public void init() {
+        if (configuration == null) {
+            try {
+                this.configuration = new Configuration(Configuration.VERSION_2_3_31);
+                configuration.setClassForTemplateLoading(this.getClass(), templatesDir);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
     public PageGenerator(String templatesDir) {
+        this.templatesDir = templatesDir;
         try {
             this.configuration = new Configuration(Configuration.VERSION_2_3_31);
             configuration.setClassForTemplateLoading(this.getClass(), templatesDir);

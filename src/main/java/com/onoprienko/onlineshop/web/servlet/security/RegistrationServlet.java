@@ -1,10 +1,13 @@
 package com.onoprienko.onlineshop.web.servlet.security;
 
 import com.onoprienko.onlineshop.entity.User;
+import com.onoprienko.onlineshop.ioc.context.OnlineShopApplicationContext;
 import com.onoprienko.onlineshop.service.UserService;
-import com.onoprienko.onlineshop.service.locator.ServiceLocator;
+import com.onoprienko.onlineshop.service.impl.DefaultUserService;
 import com.onoprienko.onlineshop.web.utils.PageGenerator;
 import com.onoprienko.onlineshop.web.utils.WebUtils;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServlet;
@@ -14,20 +17,11 @@ import java.io.IOException;
 
 
 @Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegistrationServlet extends HttpServlet {
-    private final UserService userService;
-    private final PageGenerator pageGenerator;
-
-
-    public RegistrationServlet(UserService userService, PageGenerator pageGenerator) {
-        this.userService = userService;
-        this.pageGenerator = pageGenerator;
-    }
-
-    public RegistrationServlet() {
-        this.userService = ServiceLocator.getService(UserService.class);
-        this.pageGenerator = ServiceLocator.getService(PageGenerator.class);
-    }
+    private UserService userService = (UserService) OnlineShopApplicationContext.getService(DefaultUserService.class);
+    private PageGenerator pageGenerator = (PageGenerator) OnlineShopApplicationContext.getService(PageGenerator.class);
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

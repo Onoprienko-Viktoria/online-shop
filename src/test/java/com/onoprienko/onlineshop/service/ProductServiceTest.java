@@ -6,8 +6,6 @@ import com.onoprienko.onlineshop.service.impl.DefaultProductService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

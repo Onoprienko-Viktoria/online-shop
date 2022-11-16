@@ -18,7 +18,7 @@ class LoginServletTest {
     private final HttpServletResponse httpServletResponse = Mockito.mock(HttpServletResponse.class);
     private final PrintWriter printWriter = Mockito.mock(PrintWriter.class);
 
-    private final LoginServlet loginServlet = new LoginServlet(securityService, pageGenerator, "100");
+    private final LoginServlet loginServlet = new LoginServlet(securityService, pageGenerator);
     private final Credentials credentials = Credentials.builder()
             .email("email").password("password").build();
 
@@ -55,7 +55,7 @@ class LoginServletTest {
         Mockito.when(httpServletRequest.getParameter("email")).thenReturn("email");
         Mockito.when(httpServletRequest.getParameter("password")).thenReturn("password");
 
-        Mockito.doThrow(new RuntimeException("exception")).when(securityService).login("100", credentials);
+        Mockito.doThrow(new RuntimeException("exception")).when(securityService).login(credentials);
         loginServlet.doPost(httpServletRequest, httpServletResponse);
 
 

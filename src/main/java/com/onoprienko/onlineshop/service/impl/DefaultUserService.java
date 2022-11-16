@@ -8,6 +8,8 @@ import com.onoprienko.onlineshop.security.entity.EncodeInfo;
 import com.onoprienko.onlineshop.security.entity.Role;
 import com.onoprienko.onlineshop.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
@@ -16,8 +18,10 @@ import static com.onoprienko.onlineshop.security.PasswordEncoder.generateSoleAnd
 
 @AllArgsConstructor
 @Slf4j
+@NoArgsConstructor
+@Setter
 public class DefaultUserService implements UserService {
-    private final UserDao userDao;
+    private UserDao userDao;
 
     @Override
     public void add(User user) {

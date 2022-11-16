@@ -4,7 +4,7 @@ import com.onoprienko.onlineshop.security.entity.Credentials;
 import com.onoprienko.onlineshop.security.entity.Session;
 
 public interface SecurityService {
-    Session login(String timeToLive, Credentials credentials);
+    Session login(Credentials credentials);
 
     boolean logout(Session session);
 

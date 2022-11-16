@@ -10,6 +10,7 @@ import com.onoprienko.onlineshop.security.service.SecurityService;
 import com.onoprienko.onlineshop.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
@@ -18,8 +19,10 @@ import java.util.*;
 @Slf4j
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 public class DefaultSecurityService implements SecurityService {
     private UserService userService;
+    private int timeToLive;
     private List<Session> sessionList = Collections.synchronizedList(new ArrayList<>());
 
     public DefaultSecurityService(UserService userService) {
@@ -28,7 +31,7 @@ public class DefaultSecurityService implements SecurityService {
 
 
     @Override
-    public Session login(String timeToLive, Credentials credentials) {
+    public Session login(Credentials credentials) {
         User user = userService.verifyUser(credentials);
 
         String userToken = UUID.randomUUID().toString();
@@ -36,8 +39,9 @@ public class DefaultSecurityService implements SecurityService {
         Session session = Session.builder()
                 .cart(productsCart)
                 .token(userToken)
+                .timeToLive(timeToLive)
                 .role(Role.valueOf(user.getRole()).name())
-                .expire(LocalDateTime.now().plusMinutes(Long.parseLong(timeToLive)))
+                .expire(LocalDateTime.now().plusMinutes(timeToLive))
                 .build();
         sessionList.add(session);
         log.info("Login user. Create new Session {}", session);
@@ -54,7 +58,7 @@ public class DefaultSecurityService implements SecurityService {
     @Override
     public Session findSession(String token) {
         Optional<Session> sessionOptional = sessionList.stream().filter(session -> session.getToken().equals(token)).findFirst();
-        if(sessionOptional.isEmpty()) {
+        if (sessionOptional.isEmpty()) {
             return null;
         }
 

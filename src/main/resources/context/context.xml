@@ -1,0 +1,40 @@
+<!-- SAX Parser -->
+<beans>
+    <!-- Class <?> clazz =  Class.forName (className)-->
+    <!-- clazz.newInstance() -->
+
+    <bean id="pageGenerator" class="com.onoprienko.onlineshop.web.utils.PageGenerator">
+        <property name="templatesDir" value="${html.templates.path}"/>
+    </bean>
+
+    <bean id="dataSourceFactory" class="com.onoprienko.onlineshop.utils.database.DataSourceFactory">
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="jdbcPassword" value="${jdbc.pass}"/>
+        <property name="jdbcUser" value="${jdbc.user}"/>
+    </bean>
+
+    <bean id="jdbcProductDao" class="com.onoprienko.onlineshop.dao.jdbc.JdbcProductDao">
+        <property name="dataSourceFactory" ref="dataSourceFactory"/>
+    </bean>
+
+    <bean id="jdbcUserDao" class="com.onoprienko.onlineshop.dao.jdbc.JdbcUserDao">
+        <property name="dataSourceFactory" ref="dataSourceFactory"/>
+    </bean>
+
+    <bean id="userService" class="com.onoprienko.onlineshop.service.impl.DefaultUserService">
+        <property name="userDao" ref="jdbcUserDao"/>
+    </bean>
+
+    <bean id="securityService" class="com.onoprienko.onlineshop.security.service.impl.DefaultSecurityService">
+        <property name="userService" ref="userService"/>
+        <property name="timeToLive" value="${session.timetolive}"/>
+    </bean>
+
+    <bean id="productService" class="com.onoprienko.onlineshop.service.impl.DefaultProductService">
+        <property name="productDao" ref="jdbcProductDao"/>
+    </bean>
+
+    <bean id="postConstructBeanPostProcessor" class="com.onoprienko.ioc.processor.impl.PostConstructBeanPostProcessor"/>
+    <bean id="propertiesBeanFactoryPostProcessor"
+          class="com.onoprienko.onlineshop.ioc.factory.PropertiesBeanFactoryPostProcessor"/>
+</beans>

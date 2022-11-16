@@ -62,13 +62,33 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>cartServlet</servlet-name>
+        <servlet-name>cartServletGet</servlet-name>
+        <servlet-class>com.onoprienko.onlineshop.web.servlet.products.GetCartServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>cartServletGet</servlet-name>
+        <url-pattern>/cart</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>cartServletAdd</servlet-name>
         <servlet-class>com.onoprienko.onlineshop.web.servlet.products.AddToCartServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>cartServlet</servlet-name>
-        <url-pattern>/cart/*</url-pattern>
+        <servlet-name>cartServletAdd</servlet-name>
+        <url-pattern>/cart/add</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>cartServletRemove</servlet-name>
+        <servlet-class>com.onoprienko.onlineshop.web.servlet.products.RemoveFromCartServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>cartServletRemove</servlet-name>
+        <url-pattern>/cart/remove</url-pattern>
     </servlet-mapping>
 
     <servlet>

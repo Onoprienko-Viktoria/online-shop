@@ -9,8 +9,6 @@ import com.onoprienko.onlineshop.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SecurityServiceTest {
     private final List<Session> sessionList = new ArrayList<>();
     private final UserService userService = Mockito.mock(UserService.class);
-    private final SecurityService securityService = new DefaultSecurityService(userService, sessionList);
+    private final SecurityService securityService = new DefaultSecurityService(userService, 480, sessionList);
 
     User user = User.builder()
             .name("test")
@@ -50,7 +48,7 @@ class SecurityServiceTest {
     @Test
     void createSessionReturnSession() {
         Mockito.when(userService.verifyUser(credentials)).thenReturn(user);
-        Session session = securityService.login("10", credentials);
+        Session session = securityService.login(credentials);
 
         assertNotNull(session);
         assertNotNull(session.getToken());

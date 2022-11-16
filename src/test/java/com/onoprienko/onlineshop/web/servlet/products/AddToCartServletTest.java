@@ -23,6 +23,7 @@ class AddToCartServletTest {
     private final HttpServletResponse httpServletResponse = Mockito.mock(HttpServletResponse.class);
     private final PrintWriter printWriter = Mockito.mock(PrintWriter.class);
 
+    GetCartServlet getCartServlet = new GetCartServlet(productService, pageGenerator);
     AddToCartServlet addToCartServlet = new AddToCartServlet(productService, pageGenerator);
     Product testProductOne = Product.builder().id(1L)
             .creationDate(LocalDateTime.now())
@@ -45,7 +46,7 @@ class AddToCartServletTest {
         Mockito.when(pageGenerator.getPage("add_product.ftl")).thenReturn("test");
         Mockito.when(httpServletResponse.getWriter()).thenReturn(printWriter);
 
-        addToCartServlet.doGet(httpServletRequest, httpServletResponse);
+        getCartServlet.doGet(httpServletRequest, httpServletResponse);
         HashMap<String, Object> result = new HashMap<>();
         result.put("products", session.getCart());
 

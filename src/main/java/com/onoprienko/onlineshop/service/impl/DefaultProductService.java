@@ -4,19 +4,19 @@ import com.onoprienko.onlineshop.dao.ProductDao;
 import com.onoprienko.onlineshop.entity.Product;
 import com.onoprienko.onlineshop.service.ProductService;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
+@NoArgsConstructor
+@Setter
 public class DefaultProductService implements ProductService {
-    private final ProductDao productDao;
+    private ProductDao productDao;
 
     @Override
     public List<Product> findAll(String word) {

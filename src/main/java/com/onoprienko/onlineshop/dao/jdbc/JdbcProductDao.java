@@ -1,8 +1,12 @@
 package com.onoprienko.onlineshop.dao.jdbc;
 
+import com.onoprienko.ioc.annotation.PostConstruct;
 import com.onoprienko.onlineshop.dao.ProductDao;
 import com.onoprienko.onlineshop.dao.jdbc.mapper.ProductsRowMapper;
 import com.onoprienko.onlineshop.entity.Product;
+import com.onoprienko.onlineshop.utils.database.DataSourceFactory;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,6 +20,8 @@ import java.util.List;
 
 
 @Slf4j
+@NoArgsConstructor
+@Setter
 public class JdbcProductDao implements ProductDao {
     private static final String FIND_ALL_PRODUCTS_SQL = "SELECT id, name, price, creation_date FROM Products";
     private static final String UPDATE_PRODUCTS_SQL = "UPDATE products SET name = ?, price = ? WHERE id = ? ";
@@ -23,9 +29,17 @@ public class JdbcProductDao implements ProductDao {
     private static final String DELETE_PRODUCT_SQL = "DELETE FROM products WHERE id = ?";
     private static final String FIND_ALL_CONTAINS_WORD = "SELECT id, name, price, creation_date FROM Products WHERE name like concat('%', ?, '%')";
     private static final String FIND_PRODUCT_BY_ID = "SELECT id, name, price, creation_date FROM Products WHERE id = ?";
-    private final DataSource dataSource;
+    private DataSource dataSource;
+    private DataSourceFactory dataSourceFactory;
 
     private final static ProductsRowMapper ROW_MAPPER = new ProductsRowMapper();
+
+    @PostConstruct
+    public void init() {
+        if (this.dataSource == null) {
+            this.dataSource = dataSourceFactory.create();
+        }
+    }
 
     public JdbcProductDao(DataSource dataSource) {
         this.dataSource = dataSource;

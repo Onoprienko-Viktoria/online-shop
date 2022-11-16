@@ -56,7 +56,7 @@ class UserServiceTest {
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> userService.add(testUserTwo));
 
-        String errorMes ="User already registered!";
+        String errorMes = "User already registered!";
         assertEquals(errorMes, runtimeException.getMessage());
 
         Mockito.verify(userDao, Mockito.times(1)).findByEmail("b@gmail.com");

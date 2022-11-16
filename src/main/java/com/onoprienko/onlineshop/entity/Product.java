@@ -2,7 +2,6 @@ package com.onoprienko.onlineshop.entity;
 
 import lombok.*;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor

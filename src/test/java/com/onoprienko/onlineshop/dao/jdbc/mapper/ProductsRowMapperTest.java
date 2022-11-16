@@ -3,11 +3,9 @@ package com.onoprienko.onlineshop.dao.jdbc.mapper;
 import com.onoprienko.onlineshop.entity.Product;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 

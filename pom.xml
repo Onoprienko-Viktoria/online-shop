@@ -14,6 +14,13 @@
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <!--BUILD-->
@@ -68,6 +75,11 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.Onoprienko-Viktoria</groupId>
+            <artifactId>ioc</artifactId>
+            <version>master-SNAPSHOT</version>
+        </dependency>
         <!--WEB-->
         <dependency>
             <groupId>javax.servlet</groupId>

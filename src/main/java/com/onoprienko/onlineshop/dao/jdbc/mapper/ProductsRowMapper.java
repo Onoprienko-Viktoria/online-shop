@@ -2,7 +2,6 @@ package com.onoprienko.onlineshop.dao.jdbc.mapper;
 
 import com.onoprienko.onlineshop.entity.Product;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;

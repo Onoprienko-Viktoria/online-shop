@@ -1,7 +1,10 @@
 package com.onoprienko.onlineshop.web.servlet.products;
 
+import com.onoprienko.onlineshop.ioc.context.OnlineShopApplicationContext;
 import com.onoprienko.onlineshop.service.ProductService;
-import com.onoprienko.onlineshop.service.locator.ServiceLocator;
+import com.onoprienko.onlineshop.service.impl.DefaultProductService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletException;
@@ -11,17 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class RemoveProductServlet extends HttpServlet {
-    private ProductService productService;
-
-    public RemoveProductServlet(ProductService productService) {
-        this.productService = productService;
-    }
-
-    public RemoveProductServlet() {
-        this.productService = ServiceLocator.getService(ProductService.class);
-    }
+    private ProductService productService = (ProductService) OnlineShopApplicationContext.getService(DefaultProductService.class);
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

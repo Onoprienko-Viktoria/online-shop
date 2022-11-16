@@ -4,11 +4,15 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.sql.DataSource;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
+@Setter
 public class DataSourceFactory {
     private String jdbcUrl;
     private String jdbcPassword;

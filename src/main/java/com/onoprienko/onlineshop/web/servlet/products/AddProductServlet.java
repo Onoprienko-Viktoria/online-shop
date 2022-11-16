@@ -1,10 +1,13 @@
 package com.onoprienko.onlineshop.web.servlet.products;
 
 import com.onoprienko.onlineshop.entity.Product;
+import com.onoprienko.onlineshop.ioc.context.OnlineShopApplicationContext;
 import com.onoprienko.onlineshop.service.ProductService;
-import com.onoprienko.onlineshop.service.locator.ServiceLocator;
+import com.onoprienko.onlineshop.service.impl.DefaultProductService;
 import com.onoprienko.onlineshop.web.utils.PageGenerator;
 import com.onoprienko.onlineshop.web.utils.WebUtils;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServlet;
@@ -14,20 +17,11 @@ import java.io.IOException;
 
 
 @Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public class AddProductServlet extends HttpServlet {
-    private final ProductService productService;
-    private final PageGenerator pageGenerator;
-
-    public AddProductServlet(ProductService productService, PageGenerator pageGenerator) {
-        this.productService = productService;
-        this.pageGenerator = pageGenerator;
-    }
-
-    public AddProductServlet() {
-        this.productService = ServiceLocator.getService(ProductService.class);
-        this.pageGenerator = ServiceLocator.getService(PageGenerator.class);
-    }
-
+    private ProductService productService = (ProductService) OnlineShopApplicationContext.getService(DefaultProductService.class);
+    private PageGenerator pageGenerator = (PageGenerator) OnlineShopApplicationContext.getService(PageGenerator.class);
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

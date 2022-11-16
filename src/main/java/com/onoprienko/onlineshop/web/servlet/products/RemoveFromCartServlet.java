@@ -24,7 +24,7 @@ public class RemoveFromCartServlet extends HttpServlet {
         List<Product> products = session.getCart();
         Iterator<Product> iterator = products.listIterator();
         while (iterator.hasNext()) {
-            if(Objects.equals(iterator.next().getId(), id)) {
+            if (Objects.equals(iterator.next().getId(), id)) {
                 iterator.remove();
                 break;
             }
