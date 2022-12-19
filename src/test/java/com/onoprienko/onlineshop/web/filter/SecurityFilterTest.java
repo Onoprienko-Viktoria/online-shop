@@ -2,14 +2,14 @@ package com.onoprienko.onlineshop.web.filter;
 
 import com.onoprienko.onlineshop.security.entity.Session;
 import com.onoprienko.onlineshop.security.service.SecurityService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -19,7 +19,7 @@ class SecurityFilterTest {
     private final HttpServletResponse httpServletResponse = Mockito.mock(HttpServletResponse.class);
     private final FilterChain filterChain = Mockito.mock(FilterChain.class);
 
-    SecurityFilter securityFilter = new SecurityFilter(securityService);
+    SecurityFilter securityFilter = new SecurityFilter();
 
     @Test
     void doFilterTestWithExpiredSessionSendRedirect() throws ServletException, IOException {

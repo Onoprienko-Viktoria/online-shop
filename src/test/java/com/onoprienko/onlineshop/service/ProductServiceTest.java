@@ -27,7 +27,7 @@ class ProductServiceTest {
     Product testProductThree = Product.builder().id(3L)
             .creationDate(null)
             .name("t")
-            .price(0).build();
+            .price(0.0).build();
 
     @Test
     void findAllReturnCorrectValues() {

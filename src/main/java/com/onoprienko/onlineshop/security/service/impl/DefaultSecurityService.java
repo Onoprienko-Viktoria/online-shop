@@ -25,10 +25,6 @@ public class DefaultSecurityService implements SecurityService {
     private int timeToLive;
     private List<Session> sessionList = Collections.synchronizedList(new ArrayList<>());
 
-    public DefaultSecurityService(UserService userService) {
-        this.userService = userService;
-    }
-
 
     @Override
     public Session login(Credentials credentials) {

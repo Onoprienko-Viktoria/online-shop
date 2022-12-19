@@ -1,10 +1,9 @@
 package com.onoprienko.onlineshop.dao.jdbc;
 
 import com.onoprienko.onlineshop.entity.Product;
-import com.onoprienko.onlineshop.utils.database.DataSourceFactory;
+import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.*;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,15 +24,15 @@ class JdbcProductDaoTest {
     Product testProductOne = Product.builder()
             .creationDate(LocalDateTime.now())
             .name("test 1")
-            .price(1).build();
+            .price(1.0).build();
     Product testProductTwo = Product.builder()
             .creationDate(LocalDateTime.now())
             .name("test 2")
-            .price(2).build();
+            .price(2.0).build();
     Product testProductThree = Product.builder()
             .creationDate(null)
             .name("test 3")
-            .price(3).build();
+            .price(3.0).build();
 
     @BeforeAll
     public void init() throws SQLException {
@@ -46,9 +45,11 @@ class JdbcProductDaoTest {
 
     @Test
     void addProductAndFindAllWorkCorrect() throws SQLException {
-        DataSourceFactory dataSourceFactory = new DataSourceFactory(URL, PASS, USER);
-        DataSource dataSource = dataSourceFactory.create();
-        JdbcProductDao jdbcProductDao = new JdbcProductDao(dataSource);
+        HikariDataSource hikariDataSource = new HikariDataSource();
+        hikariDataSource.setJdbcUrl(URL);
+        hikariDataSource.setUsername(USER);
+        hikariDataSource.setPassword(PASS);
+        JdbcProductDao jdbcProductDao = new JdbcProductDao(hikariDataSource);
 
         jdbcProductDao.add(testProductOne);
         jdbcProductDao.add(testProductTwo);
@@ -72,8 +73,11 @@ class JdbcProductDaoTest {
 
     @Test
     void removeProductWorkCorrect() throws SQLException {
-        DataSourceFactory dataSourceFactory = new DataSourceFactory(URL, PASS, USER);
-        JdbcProductDao jdbcProductDao = new JdbcProductDao(dataSourceFactory.create());
+        HikariDataSource hikariDataSource = new HikariDataSource();
+        hikariDataSource.setJdbcUrl(URL);
+        hikariDataSource.setUsername(USER);
+        hikariDataSource.setPassword(PASS);
+        JdbcProductDao jdbcProductDao = new JdbcProductDao(hikariDataSource);
 
         jdbcProductDao.add(testProductOne);
         jdbcProductDao.add(testProductTwo);
@@ -89,8 +93,11 @@ class JdbcProductDaoTest {
 
     @Test
     void editProduct() throws SQLException {
-        DataSourceFactory dataSourceFactory = new DataSourceFactory(URL, PASS, USER);
-        JdbcProductDao jdbcProductDao = new JdbcProductDao(dataSourceFactory.create());
+        HikariDataSource hikariDataSource = new HikariDataSource();
+        hikariDataSource.setJdbcUrl(URL);
+        hikariDataSource.setUsername(USER);
+        hikariDataSource.setPassword(PASS);
+        JdbcProductDao jdbcProductDao = new JdbcProductDao(hikariDataSource);
 
         jdbcProductDao.add(testProductOne);
         jdbcProductDao.add(testProductTwo);
@@ -111,8 +118,11 @@ class JdbcProductDaoTest {
 
     @Test
     void findProductsByWordsIn() throws SQLException {
-        DataSourceFactory dataSourceFactory = new DataSourceFactory(URL, PASS, USER);
-        JdbcProductDao jdbcProductDao = new JdbcProductDao(dataSourceFactory.create());
+        HikariDataSource hikariDataSource = new HikariDataSource();
+        hikariDataSource.setJdbcUrl(URL);
+        hikariDataSource.setUsername(USER);
+        hikariDataSource.setPassword(PASS);
+        JdbcProductDao jdbcProductDao = new JdbcProductDao(hikariDataSource);
 
         jdbcProductDao.add(testProductOne);
         jdbcProductDao.add(testProductTwo);
@@ -129,8 +139,11 @@ class JdbcProductDaoTest {
 
     @Test
     void findProductById() throws SQLException {
-        DataSourceFactory dataSourceFactory = new DataSourceFactory(URL, PASS, USER);
-        JdbcProductDao jdbcProductDao = new JdbcProductDao(dataSourceFactory.create());
+        HikariDataSource hikariDataSource = new HikariDataSource();
+        hikariDataSource.setJdbcUrl(URL);
+        hikariDataSource.setUsername(USER);
+        hikariDataSource.setPassword(PASS);
+        JdbcProductDao jdbcProductDao = new JdbcProductDao(hikariDataSource);
 
         jdbcProductDao.add(testProductThree);
 

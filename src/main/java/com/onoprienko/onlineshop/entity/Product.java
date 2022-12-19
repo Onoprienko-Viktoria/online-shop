@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @ToString
 @EqualsAndHashCode
 public class Product {
-    private long id;
+    private Long id;
     private String name;
-    private double price;
+    private Double price;
     private LocalDateTime creationDate;
 }

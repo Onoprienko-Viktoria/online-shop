@@ -1,7 +1,7 @@
 package com.onoprienko.onlineshop.dao.jdbc;
 
 import com.onoprienko.onlineshop.entity.User;
-import com.onoprienko.onlineshop.utils.database.DataSourceFactory;
+import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.*;
 
 import java.sql.*;
@@ -46,8 +46,11 @@ class JdbcUserDaoTest {
                 .password("password")
                 .sole("dsdfldslf")
                 .build();
-        DataSourceFactory dataSourceFactory = new DataSourceFactory(URL, PASS, USER);
-        JdbcUserDao jdbcProductDao = new JdbcUserDao(dataSourceFactory.create());
+        HikariDataSource hikariDataSource = new HikariDataSource();
+        hikariDataSource.setJdbcUrl(URL);
+        hikariDataSource.setUsername(USER);
+        hikariDataSource.setPassword(PASS);
+        JdbcUserDao jdbcProductDao = new JdbcUserDao(hikariDataSource);
 
         jdbcProductDao.add(userOne);
         jdbcProductDao.add(userTwo);

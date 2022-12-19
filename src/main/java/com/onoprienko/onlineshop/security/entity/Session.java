@@ -14,7 +14,7 @@ import java.util.List;
 public class Session {
     private String token;
     private String role;
-    private int timeToLive;
+    private Integer timeToLive;
     private LocalDateTime expire;
     private List<Product> cart;
 }
