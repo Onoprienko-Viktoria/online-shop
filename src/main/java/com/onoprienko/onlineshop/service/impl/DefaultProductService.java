@@ -4,31 +4,28 @@ import com.onoprienko.onlineshop.dao.ProductDao;
 import com.onoprienko.onlineshop.entity.Product;
 import com.onoprienko.onlineshop.service.ProductService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 @Slf4j
 @AllArgsConstructor
-@NoArgsConstructor
 @Setter
 public class DefaultProductService implements ProductService {
-    private ProductDao productDao;
+    private final ProductDao productDao;
 
     @Override
     public List<Product> findAll(String word) {
         if (word != null) {
-            List<Product> productsByWordIn = productDao.findAllByWordIn(word);
-            log.info("Get all products with word {},  {}", word, productsByWordIn.toString());
-            return productsByWordIn;
+            log.info("Get all products with word {}", word);
+            return productDao.findAllByWordIn(word);
         }
-
-        List<Product> products = productDao.findAll();
-        log.info("Get all products {}", products.toString());
-        return products;
+        log.info("Get all products");
+        return productDao.findAll();
     }
 
 

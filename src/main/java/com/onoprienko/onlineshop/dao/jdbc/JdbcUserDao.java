@@ -5,10 +5,10 @@ import com.onoprienko.onlineshop.dao.UserDao;
 import com.onoprienko.onlineshop.dao.jdbc.mapper.UsersRowMapper;
 import com.onoprienko.onlineshop.entity.User;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -16,15 +16,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Optional;
 
-
+@Repository
 @Slf4j
 @AllArgsConstructor
-@NoArgsConstructor
 @Setter
 public class JdbcUserDao implements UserDao {
     private static final String ADD_USER = "INSERT INTO users (name, email, password, sole, role) VALUES(?, ?, ?, ?, ?)";
     private static final String FIND_USER_BY_EMAIL = "SELECT name, email, password, sole, role FROM users WHERE email = ?";
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     private final static UsersRowMapper USERS_ROW_MAPPER = new UsersRowMapper();
 

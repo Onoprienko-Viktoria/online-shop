@@ -8,22 +8,25 @@ import com.onoprienko.onlineshop.security.entity.Role;
 import com.onoprienko.onlineshop.security.entity.Session;
 import com.onoprienko.onlineshop.security.service.SecurityService;
 import com.onoprienko.onlineshop.service.UserService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Service
 @Slf4j
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Setter
 public class DefaultSecurityService implements SecurityService {
-    private UserService userService;
+    private final UserService userService;
+    @Value("${session.timetolive}")
     private int timeToLive;
-    private List<Session> sessionList = Collections.synchronizedList(new ArrayList<>());
+    //todo redo
+    private final List<Session> sessionList = Collections.synchronizedList(new ArrayList<>());
 
 
     @Override

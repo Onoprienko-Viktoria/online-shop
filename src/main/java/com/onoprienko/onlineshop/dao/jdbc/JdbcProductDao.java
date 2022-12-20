@@ -4,10 +4,10 @@ import com.onoprienko.onlineshop.dao.ProductDao;
 import com.onoprienko.onlineshop.dao.jdbc.mapper.ProductsRowMapper;
 import com.onoprienko.onlineshop.entity.Product;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -17,10 +17,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Repository
 @Slf4j
 @AllArgsConstructor
-@NoArgsConstructor
 @Setter
 public class JdbcProductDao implements ProductDao {
     private static final String FIND_ALL_PRODUCTS_SQL = "SELECT id, name, price, creation_date FROM Products";
@@ -29,7 +28,7 @@ public class JdbcProductDao implements ProductDao {
     private static final String DELETE_PRODUCT_SQL = "DELETE FROM products WHERE id = ?";
     private static final String FIND_ALL_CONTAINS_WORD = "SELECT id, name, price, creation_date FROM Products WHERE name like concat('%', ?, '%')";
     private static final String FIND_PRODUCT_BY_ID = "SELECT id, name, price, creation_date FROM Products WHERE id = ?";
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     private final static ProductsRowMapper ROW_MAPPER = new ProductsRowMapper();
 
