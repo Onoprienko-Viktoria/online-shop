@@ -37,14 +37,12 @@ class JdbcUserDaoTest {
                 .email("em")
                 .name("name")
                 .password("pass")
-                .sole("dsadsad")
                 .build();
         User userTwo = User.builder()
                 .role("ADMIN")
                 .email("emaiui")
                 .name("n")
                 .password("password")
-                .sole("dsdfldslf")
                 .build();
         HikariDataSource hikariDataSource = new HikariDataSource();
         hikariDataSource.setJdbcUrl(URL);
@@ -62,7 +60,6 @@ class JdbcUserDaoTest {
         assertEquals(userByEmailOne.getEmail(), userOne.getEmail());
         assertEquals(userByEmailOne.getRole(), userOne.getRole());
         assertEquals(userByEmailOne.getPassword(), userOne.getPassword());
-        assertEquals(userByEmailOne.getSole(), userOne.getSole());
 
         User userByEmailTwo = jdbcProductDao.findByEmail(userTwo.getEmail()).get();
 
@@ -71,7 +68,6 @@ class JdbcUserDaoTest {
         assertEquals(userByEmailTwo.getEmail(), userTwo.getEmail());
         assertEquals(userByEmailTwo.getRole(), userTwo.getRole());
         assertEquals(userByEmailTwo.getPassword(), userTwo.getPassword());
-        assertEquals(userByEmailTwo.getSole(), userTwo.getSole());
     }
 
     @AfterEach

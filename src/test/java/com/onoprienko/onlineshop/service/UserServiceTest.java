@@ -7,6 +7,9 @@ import com.onoprienko.onlineshop.security.entity.Role;
 import com.onoprienko.onlineshop.service.impl.DefaultUserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -14,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
     private final UserDao userDao = Mockito.mock(UserDao.class);
-    private final UserService userService = new DefaultUserService(userDao);
+    private final PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
+    private final DefaultUserService userService = new DefaultUserService(userDao, passwordEncoder);
 
 
     User testUserOne = User.builder()
@@ -22,7 +26,6 @@ class UserServiceTest {
             .email("a@gmail.com")
             .name("Tom")
             .password("70bdeae2a2b72c7991d36ee1b6f792a1")
-            .sole("21675f33-8b4c-45b5-83a0-0e5f32ec364b")
             .build();
     Credentials userOneCreds = Credentials.builder()
             .email("a@gmail.com")
@@ -33,7 +36,6 @@ class UserServiceTest {
             .email("b@gmail.com")
             .name("John")
             .password("asdasdad")
-            .sole("cxvfrvwvsdccadcva")
             .build();
     Credentials testUserTwoCreds = Credentials.builder()
             .email(testUserTwo.getEmail())
@@ -44,11 +46,43 @@ class UserServiceTest {
     void addUserWorkCorrect() {
         Mockito.when(userDao.findByEmail("b@gmail.com")).thenReturn(Optional.empty());
 
-        userService.add(testUserTwo);
+        User user = userService.add(testUserTwo);
+
+        assertEquals(user.getEmail(), "b@gmail.com");
+        assertEquals(user.getName(), "John");
 
         Mockito.verify(userDao, Mockito.times(1)).findByEmail("b@gmail.com");
         Mockito.verify(userDao, Mockito.times(1)).add(testUserTwo);
     }
+
+    @Test
+    void addUserNullReturnNullPointerException() {
+        Mockito.when(userDao.findByEmail("b@gmail.com")).thenReturn(Optional.empty());
+
+        NullPointerException nullPointerException = assertThrows(NullPointerException.class, () -> userService.add(null));
+
+        assertEquals(nullPointerException.getMessage(), "Cannot invoke \"com.onoprienko.onlineshop.entity.User.getEmail()\" because \"user\" is null");
+    }
+
+    @Test
+    void addUserWithNullRoleSaveUserWithRoleUSER() {
+        Mockito.when(userDao.findByEmail("b@gmail.com")).thenReturn(Optional.empty());
+
+        User user = userService.add(User.builder()
+                .email("email")
+                .name("name")
+                .password("pass")
+                .role(null)
+                .build());
+
+        assertEquals(user.getEmail(), "email");
+        assertEquals(user.getName(), "name");
+        assertEquals(user.getRole(), "USER");
+
+        Mockito.verify(userDao, Mockito.times(1)).findByEmail("email");
+        Mockito.verify(userDao, Mockito.times(1)).add(user);
+    }
+
 
     @Test
     void addUserReturnsExceptionIfUserAlreadyExist() {
@@ -63,44 +97,27 @@ class UserServiceTest {
     }
 
     @Test
-    void verifyUserReturnsExceptionIfUserNotFound() {
-        Mockito.when(userDao.findByEmail("a@gmail.com")).thenReturn(Optional.empty());
-
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> userService.verifyUser(userOneCreds));
-
-        String errorMes = "User not found";
-        assertEquals(errorMes, runtimeException.getMessage());
-
-        Mockito.verify(userDao, Mockito.times(1)).findByEmail(testUserOne.getEmail());
-
-    }
-
-    @Test
-    void verifyUserReturnsUser() {
+    void loadUserByUsernameReturnsUserDetails() {
         Mockito.when(userDao.findByEmail(testUserOne.getEmail())).thenReturn(Optional.of(testUserOne));
 
-        User user = userService.verifyUser(userOneCreds);
+        UserDetails user = userService.loadUserByUsername(userOneCreds.getEmail());
 
         assertNotNull(user);
-        assertEquals(user.getEmail(), testUserOne.getEmail());
         assertEquals(user.getPassword(), testUserOne.getPassword());
-        assertEquals(user.getRole(), testUserOne.getRole());
-        assertEquals(user.getName(), testUserOne.getName());
-        assertEquals(user.getSole(), testUserOne.getSole());
+        assertEquals(user.getUsername(), testUserOne.getEmail());
+        user.getAuthorities().forEach(grantedAuthority -> assertEquals(grantedAuthority.getAuthority(), testUserOne.getRole()));
 
         Mockito.verify(userDao, Mockito.times(1)).findByEmail(testUserOne.getEmail());
     }
 
     @Test
-    void verifyUserReturnsExceptionIfPasswordIncorrect() {
-        Mockito.when(userDao.findByEmail(testUserTwo.getEmail())).thenReturn(Optional.of(testUserTwo));
+    void loadUserByUsernameReturnsExceptionIfUserNotFound() {
+        Mockito.when(userDao.findByEmail(testUserOne.getEmail())).thenThrow(new UsernameNotFoundException("Not found"));
 
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> userService.verifyUser(testUserTwoCreds));
+        UsernameNotFoundException usernameNotFoundException = assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(userOneCreds.getEmail()));
 
-        String errorMes = "Invalid password";
-        assertEquals(errorMes, runtimeException.getMessage());
+        assertEquals(usernameNotFoundException.getMessage(), "Not found");
 
-        Mockito.verify(userDao, Mockito.times(1)).findByEmail(testUserTwo.getEmail());
-
+        Mockito.verify(userDao, Mockito.times(1)).findByEmail(testUserOne.getEmail());
     }
 }

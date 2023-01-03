@@ -10,7 +10,6 @@ public class UsersRowMapper {
         return User.builder()
                 .name(resultSet.getString("name"))
                 .email(resultSet.getString("email"))
-                .sole(resultSet.getString("sole"))
                 .role(resultSet.getString("role"))
                 .password(resultSet.getString("password"))
                 .build();

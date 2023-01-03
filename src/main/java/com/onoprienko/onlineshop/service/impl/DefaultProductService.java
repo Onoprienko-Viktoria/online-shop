@@ -30,16 +30,18 @@ public class DefaultProductService implements ProductService {
 
 
     @Override
-    public void add(Product product) {
+    public Product add(Product product) {
         product.setCreationDate(LocalDateTime.now());
         productDao.add(product);
         log.info("Add product to database {}", product);
+        return product;
     }
 
     @Override
-    public void remove(Long id) {
+    public Long remove(Long id) {
         productDao.remove(id);
         log.info("Remove product from database, id: {}", id);
+        return id;
     }
 
     @Override
@@ -50,9 +52,10 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
-    public void edit(Product product) {
+    public Product edit(Product product) {
         productDao.edit(product);
         log.info("Edit product {}", product);
+        return product;
     }
 }
 

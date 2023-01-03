@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 class ProductsRowMapperTest {
 
     @Test
-    public void testMapRow() throws SQLException {
+    public void testMapRowReturnCorrectResult() throws SQLException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime localDate = LocalDateTime.parse("2022-04-08 12:30", formatter);
         ProductsRowMapper productsRowMapper = new ProductsRowMapper();

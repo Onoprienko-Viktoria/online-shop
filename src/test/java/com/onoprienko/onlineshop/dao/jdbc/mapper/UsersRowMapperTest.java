@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 class UsersRowMapperTest {
 
     @Test
-    void mapRow() throws SQLException {
+    void testMapRowReturnCorrectResult() throws SQLException {
         UsersRowMapper usersRowMapper = new UsersRowMapper();
         ResultSet resultSetMock = mock(ResultSet.class);
 
@@ -22,8 +22,6 @@ class UsersRowMapperTest {
                 .thenReturn("Tom");
         when(resultSetMock.getString("email"))
                 .thenReturn("tom@gmail.com");
-        when(resultSetMock.getString("sole"))
-                .thenReturn("sole");
         when(resultSetMock.getString("role"))
                 .thenReturn("USER");
         when(resultSetMock.getString("password"))
@@ -32,7 +30,6 @@ class UsersRowMapperTest {
         User user = usersRowMapper.mapRow(resultSetMock);
 
         assertNotNull(user);
-        assertEquals(user.getSole(), "sole");
         assertEquals(user.getEmail(), "tom@gmail.com");
         assertEquals(user.getRole(), "USER");
         assertEquals(user.getName(), "Tom");

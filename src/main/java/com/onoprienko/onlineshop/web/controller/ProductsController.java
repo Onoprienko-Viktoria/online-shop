@@ -37,7 +37,7 @@ public class ProductsController {
             productService.add(product);
             return "redirect:/products";
         } catch (Exception e) {
-            log.error("Error in add product servlet", e);
+            log.error("Error while add product", e);
             String errorMessage = "Your product has not been added! " + e.getMessage();
             model.addAttribute("errorMessage", errorMessage);
             return "add_product";
@@ -59,7 +59,7 @@ public class ProductsController {
             String errorMessage = "Your product has not been edited! " + e.getMessage();
             model.addAttribute("id", product.getId());
             model.addAttribute("errorMessage", errorMessage);
-            log.error("Error while editing product ", e);
+            log.error("Error while edit product ", e);
             return "edit_product";
         }
     }

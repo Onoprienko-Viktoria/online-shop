@@ -6,6 +6,5 @@ create table if not exists users
     name     character varying(250),
     email    character varying(250),
     password character varying(250),
-    role     character varying(250),
-    sole     character varying(250)
+    role     character varying(250)
 )
