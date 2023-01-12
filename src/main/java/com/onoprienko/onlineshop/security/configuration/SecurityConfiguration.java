@@ -18,6 +18,9 @@ public class SecurityConfiguration {
     private final static String COOKIE_NAME = "user-token";
     private final DefaultUserService defaultUserService;
 
+    @Value("${security.cookie.time-to-live}")
+    private int cookieTimeToLive;
+
     @Value("${security.secret.key}")
     private String secret;
 
@@ -38,8 +41,8 @@ public class SecurityConfiguration {
                 .and()
                 .rememberMe()
                 .alwaysRemember(true)
-                .tokenValiditySeconds(480)
-                .rememberMeCookieName("user-token")
+                .tokenValiditySeconds(cookieTimeToLive)
+                .rememberMeCookieName(COOKIE_NAME)
                 .key(secret)
                 .and()
                 .rememberMe().useSecureCookie(true).userDetailsService(defaultUserService)

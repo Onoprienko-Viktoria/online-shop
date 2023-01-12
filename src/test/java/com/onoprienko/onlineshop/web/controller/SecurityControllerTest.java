@@ -1,7 +1,6 @@
 package com.onoprienko.onlineshop.web.controller;
 
 import com.onoprienko.onlineshop.entity.User;
-import com.onoprienko.onlineshop.security.entity.Credentials;
 import com.onoprienko.onlineshop.service.impl.DefaultUserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,8 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class SecurityControllerTest {
     private final DefaultUserService userService = Mockito.mock(DefaultUserService.class);
     private final SecurityController securityController = new SecurityController(userService);
-    private final Credentials credentials = Credentials.builder()
-            .email("email").password("password").build();
+
 
     @Test
     void getLoginPageReturnLoginPageName() {

@@ -2,7 +2,6 @@ package com.onoprienko.onlineshop.service;
 
 import com.onoprienko.onlineshop.dao.UserDao;
 import com.onoprienko.onlineshop.entity.User;
-import com.onoprienko.onlineshop.security.entity.Credentials;
 import com.onoprienko.onlineshop.security.entity.Role;
 import com.onoprienko.onlineshop.service.impl.DefaultUserService;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,7 @@ class UserServiceTest {
             .name("Tom")
             .password("70bdeae2a2b72c7991d36ee1b6f792a1")
             .build();
-    Credentials userOneCreds = Credentials.builder()
+    User userOneCreds = User.builder()
             .email("a@gmail.com")
             .password("1234")
             .build();
@@ -36,10 +35,6 @@ class UserServiceTest {
             .email("b@gmail.com")
             .name("John")
             .password("asdasdad")
-            .build();
-    Credentials testUserTwoCreds = Credentials.builder()
-            .email(testUserTwo.getEmail())
-            .password("1234")
             .build();
 
     @Test
